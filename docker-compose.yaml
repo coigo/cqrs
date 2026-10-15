@@ -1,0 +1,20 @@
+services:
+  redis:
+    image: redis:7
+    ports:
+       - "6379:6379"
+
+  debezium:
+    image: quay.io/debezium/server:3.0
+    environment:
+      QUARKUS_LOG_CONSOLE_JSON: "false"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - redis
+    volumes:
+      - ./debezium/config:/debezium/config
+      - debezium_data:/debezium/data
+
+volumes:
+  debezium_data:
